@@ -16,6 +16,8 @@ class _HomeState extends State<Home> {
   late int myImagenum;
   late List<int> myScore;
   late List<int> computerScore;
+  List<String> messages = ["You win!", "Computer win!", "No one win"];
+  String messege = "";
   @override
   void initState() {
     setState(() {
@@ -30,9 +32,26 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Rock Paper Scissors"),
-        centerTitle: true,
-      ),
+          title: const Text("Rock Paper Scissors"),
+          centerTitle: true,
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Score(
+                            myScore: myScore,
+                            computerScore: computerScore,
+                          )),
+                );
+              },
+              child: const Text(
+                "Score",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ]),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -67,21 +86,66 @@ class _HomeState extends State<Home> {
               ),
               Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 150,
-                      height: 150,
-                      child: Image.asset("images/$randomImagenum.png"),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Image.asset("images/$randomImagenum.png"),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Computer",
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.purple[200]),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
-                      width: 150,
-                      height: 150,
-                      child: Image.asset("images/$myImagenum.png"),
+                      padding: const EdgeInsets.all(8),
+                      child: const Text(
+                        "VS",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Image.asset("images/$myImagenum.png"),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "You",
+                            style: TextStyle(
+                                fontSize: 16, color: Colors.purple[200]),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  messege,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 50,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -94,12 +158,15 @@ class _HomeState extends State<Home> {
                         if (randomImagenum == 1) {
                           myScore.add(1);
                           computerScore.add(1);
+                          messege = messages[2];
                         } else if (randomImagenum == 2) {
                           myScore.add(1);
                           computerScore.add(0);
+                          messege = messages[0];
                         } else {
                           myScore.add(0);
                           computerScore.add(1);
+                          messege = messages[1];
                         }
                       });
                     },
@@ -118,12 +185,15 @@ class _HomeState extends State<Home> {
                         if (randomImagenum == 2) {
                           myScore.add(1);
                           computerScore.add(1);
+                          messege = messages[2];
                         } else if (randomImagenum == 1) {
                           myScore.add(0);
                           computerScore.add(1);
+                          messege = messages[1];
                         } else {
                           myScore.add(1);
                           computerScore.add(0);
+                          messege = messages[0];
                         }
                       });
                     },
@@ -147,12 +217,15 @@ class _HomeState extends State<Home> {
                         if (randomImagenum == 3) {
                           myScore.add(1);
                           computerScore.add(1);
+                          messege = messages[2];
                         } else if (randomImagenum == 1) {
                           myScore.add(1);
                           computerScore.add(0);
+                          messege = messages[0];
                         } else {
                           myScore.add(0);
                           computerScore.add(1);
+                          messege = messages[1];
                         }
                       });
                     },
@@ -164,25 +237,7 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
-              Container(
-                width: 300,
-                padding: const EdgeInsets.all(8),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Score(
-                                  myScore: myScore,
-                                  computerScore: computerScore,
-                                )),
-                      );
-                    },
-                    child: const Text(
-                      "Score",
-                      style: TextStyle(fontSize: 18),
-                    )),
-              )
+              const Spacer(),
             ],
           ),
         ),
