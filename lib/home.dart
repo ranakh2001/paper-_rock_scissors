@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -16,8 +17,10 @@ class _HomeState extends State<Home> {
   late int myImagenum;
   late List<int> myScore;
   late List<int> computerScore;
-  List<String> messages = ["You win!", "Computer win!", "No one win"];
+  List<String> messages = ["You win!", "System win!", "No one win"];
   String messege = "";
+  bool isPlay = false;
+  double turns = 0;
   @override
   void initState() {
     setState(() {
@@ -57,32 +60,41 @@ class _HomeState extends State<Home> {
         child: Center(
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    width: 30,
-                    height: 30,
-                    child: Image.asset("images/1.png"),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 8),
-                    width: 30,
-                    height: 30,
-                    child: Image.asset("images/2.png"),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset("images/3.png"),
-                  ),
-                ],
+              AnimatedRotation(
+                curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 800),
+                turns: turns,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          width: 30,
+                          height: 30,
+                          child: Image.asset("images/1.png"),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 8),
+                          width: 30,
+                          height: 30,
+                          child: Image.asset("images/2.png"),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: Image.asset("images/3.png"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(24.0),
@@ -92,12 +104,15 @@ class _HomeState extends State<Home> {
                     Expanded(
                       child: Column(
                         children: [
-                          Image.asset("images/$randomImagenum.png"),
+                          AnimatedScale(
+                              scale: isPlay ? 0 : 1.0,
+                              duration: const Duration(milliseconds: 250),
+                              child: Image.asset("images/$randomImagenum.png")),
                           const SizedBox(
                             height: 10,
                           ),
                           Text(
-                            "Computer",
+                            "System",
                             style: TextStyle(
                                 fontSize: 16, color: Colors.purple[200]),
                           ),
@@ -118,7 +133,10 @@ class _HomeState extends State<Home> {
                     Expanded(
                       child: Column(
                         children: [
-                          Image.asset("images/$myImagenum.png"),
+                          AnimatedScale(
+                              scale: isPlay ? 0 : 1.0,
+                              duration: const Duration(milliseconds: 250),
+                              child: Image.asset("images/$myImagenum.png")),
                           const SizedBox(
                             height: 10,
                           ),
@@ -144,30 +162,37 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
+              // const SizedBox(
+              //   height: 50,
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
                     onTap: () {
                       setState(() {
-                        randomImagenum = Random().nextInt(3) + 1;
-                        myImagenum = 1;
-                        if (randomImagenum == 1) {
-                          myScore.add(1);
-                          computerScore.add(1);
-                          messege = messages[2];
-                        } else if (randomImagenum == 2) {
-                          myScore.add(1);
-                          computerScore.add(0);
-                          messege = messages[0];
-                        } else {
-                          myScore.add(0);
-                          computerScore.add(1);
-                          messege = messages[1];
-                        }
+                        isPlay = true;
+                        turns += 2;
+                      });
+                      Timer(const Duration(milliseconds: 800), () {
+                        setState(() {
+                          randomImagenum = Random().nextInt(3) + 1;
+                          myImagenum = 1;
+                          isPlay = false;
+                          if (randomImagenum == 1) {
+                            myScore.add(1);
+                            computerScore.add(1);
+                            messege = messages[2];
+                          } else if (randomImagenum == 2) {
+                            myScore.add(1);
+                            computerScore.add(0);
+                            messege = messages[0];
+                          } else {
+                            myScore.add(0);
+                            computerScore.add(1);
+                            messege = messages[1];
+                          }
+                        });
                       });
                     },
                     child: Container(
@@ -180,6 +205,7 @@ class _HomeState extends State<Home> {
                   InkWell(
                     onTap: () {
                       setState(() {
+                        isPlay = true;
                         randomImagenum = Random().nextInt(3) + 1;
                         myImagenum = 2;
                         if (randomImagenum == 2) {
@@ -212,6 +238,7 @@ class _HomeState extends State<Home> {
                   InkWell(
                     onTap: () {
                       setState(() {
+                        isPlay = true;
                         randomImagenum = Random().nextInt(3) + 1;
                         myImagenum = 3;
                         if (randomImagenum == 3) {
